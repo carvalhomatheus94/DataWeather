@@ -20,7 +20,7 @@ $ npx react-native run-android
 ```
 > IOS
 ```bash
-$ cd ios && pod install && cd.. && npx react-native run-ios
+$ cd ios && pod install && cd .. && npx react-native run-ios
 ```
 ### DEMO
 ![](https://github.com/carvalhomatheus94/DataWeather/blob/main/docs/print_android.png)
