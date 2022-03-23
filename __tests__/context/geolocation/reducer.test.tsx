@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { DataProps } from '~/context/geolocation/props';
+import { DataProps } from '/context/geolocation/props';
 import { geolocationReducer, getPositionUser, getFindInfoPosition, initialState } from '~/context/geolocation/reducer';
 
 describe('Test geolocation reducer', () => {

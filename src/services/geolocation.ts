@@ -12,7 +12,7 @@ export async function findLocation({latitude, longitude} : Response) {
       .then(({data}) => {
         resolve(data)
       })
-      .catch(err => {
+      .catch(() => {
         resolve(false)
         Alert.alert('Localização não encontrada.')
       })

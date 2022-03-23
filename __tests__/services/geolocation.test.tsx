@@ -47,18 +47,17 @@ const data: DataProps = {
   "cod": 200
 }
 
-describe('sucess request api', () => {
-  it('returns data when sendMessage is called', async () => {
+describe('request tests api', () => {
+  it('sucess request api', async () => {
       var mock = new MockAdapter(axios);
       await mock.onGet("https://api.openweathermap.org/data/2.5/weather?lat=-22.5082000000000022&lon=-44.09341833333333&units=Metric&appid=9e349360c639f2cc8befe56e9835907a").reply(200, {
         data: data
       });
   });
-});
 
-describe('failed request api', () => {
-  it('returns data when sendMessage is called', async () => {
+  it('failed request api', async () => {
       var mock = new MockAdapter(axios);
       await mock.onGet("https://api.openweathermap.org/data/2.5/weather?lat=-22.5082000000000022&lon=-44.09341833333333&units=Metric&appid=9e349360c639f2cc8befe56e9835907a").networkError();
   });
 });
+

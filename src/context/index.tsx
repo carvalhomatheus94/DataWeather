@@ -5,7 +5,7 @@ Store.displayName = 'Store';
 
 export const useStore = () => useContext(Store);
 
-export const StoreProvider = ({ children, initialState, reducer }) => {
+export const StoreProvider = ({ children, initialState, reducer }: any) => {
   const [globalState, dispatch] = useReducer(reducer, initialState);
 
   return (

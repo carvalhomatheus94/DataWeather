@@ -1,6 +1,7 @@
 import React, {createContext, useState, useContext} from 'react';
 import Geolocation from '@react-native-community/geolocation';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
+import {check, PERMISSIONS, RESULTS, openSettings} from 'react-native-permissions';
 import { useStore } from '..';
 import * as findLocation from '../../services/geolocation';
 import { GeolocationContextData, PositionProps } from './props';
@@ -10,12 +11,44 @@ const GeolocationContext = createContext<GeolocationContextData>({} as Geolocati
 
 const GeolocationProvider: React.FC = ({children}) => {
   const [state, dispatch] = useStore();
-  const {loading, data} = state
+  const [errorPermission, setErrorPermission] = useState(false);
+  const {loading, data} = state;
+
+
+  function requestPermissions() {
+    check(Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_ALWAYS : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            setErrorPermission(true)
+            openSettings()
+            break;
+          case RESULTS.DENIED:
+            setErrorPermission(true)
+            openSettings()
+            break;
+          case RESULTS.LIMITED:
+            setErrorPermission(false)
+            openSettings()
+            break;
+          case RESULTS.GRANTED:
+            setErrorPermission(false)
+            getUserLocation()
+            break;
+          case RESULTS.BLOCKED:
+            setErrorPermission(true)
+            break;
+        }
+      })
+      .catch((error) => {
+        // …
+      });
+  };
 
   async function findDataPosition({latitude, longitude}: PositionProps) {
     const response: any = await findLocation.findLocation({latitude, longitude});
       dispatch(getFindInfoPosition(response))
-  }
+  };
 
   function getUserLocation() {
     Geolocation.getCurrentPosition(
@@ -32,10 +65,10 @@ const GeolocationProvider: React.FC = ({children}) => {
         maximumAge: 20000,
       }
     );
-  }
+  };
 
   return (
-    <GeolocationContext.Provider value={{data, loading, getUserLocation}}>
+    <GeolocationContext.Provider value={{data, errorPermission, loading, getUserLocation, requestPermissions}}>
       {children}
     </GeolocationContext.Provider>
   );
@@ -51,4 +84,4 @@ function useGeolocation() {
   return context;
 }
 
-export {GeolocationProvider, useGeolocation}
+export {GeolocationProvider, useGeolocation};
